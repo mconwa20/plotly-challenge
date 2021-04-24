@@ -4,7 +4,8 @@ function buildMetadata(sample){
     d3.json("samples.json").then(data =>{
         // console.log(data);
         var metaData = data.metadata;
-        var results = metaData.filter(d => d.id == sample);
+        var results = metaData.filter(sampleObject =>
+            sampleObject.id == sample);
         var finalResult = results[0];
         // console.log(finalResult);
         var demographicsData = d3.select("#sample-metadata");
@@ -16,47 +17,20 @@ function buildMetadata(sample){
     })
 };
 
-// Initializes the page with table
-
-function init() {
-    // Use D3 to select the dropdown menu
-    var dropDownMenu = d3.select("#selDataset");
-    d3.json("samples.json").then(data =>{
-        var names = data.names;
-        // console.log(names)
-        names.forEach(sample => {
-            dropDown.append("option")
-            .text(sample)
-            .property("value",sample);
-        });
-        var firstSample = names[0];
-        console.log(firstSample);
-        buildTable(firstSample);
-        buildCharts(firstSample);
-    });
-}
-
-function optionChanged(name){
-    buildTable(name);
-    buildCharts(name);
-};
-
-
 // horizontal bar chart and bubble chart
 
 function buildCharts(sample){
     d3.json("samples.json").then(data =>{
         var sample = data.sample;
-        var results = sample.filter(d => d.id == sample);
+        var results = sample.filter(sampleObject =>
+            sampleObject.id == sample);
         var finalResult = results[0];
         console.log(finalResult);
 
-        // graph info
         var otuIDS = finalResult.otu_ids;
         var sampleValues = finalResult.sample_values;
         var otuLabels = finalResult.otu_labels;
 
-        // most populous variables for charts
         var sliceIds = otuIDS.slice(0,10).reverse();
         var sliceValues = sampleValues.slice(0,10).reverse();
         var sliceLabels = otuLabels.slice(0,10).reverse();
