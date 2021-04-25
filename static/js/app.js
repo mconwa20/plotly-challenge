@@ -36,8 +36,8 @@ function buildCharts(sample){
         var sliceLabels = otuLabels.slice(0,10).reverse();
 
 
-        // bar chart (#TRACE1)
-        var trace1 = {
+        // bar chart
+        var barChart = {
             x: sliceIds,
             y: sliceValues.map(function(a){
                 return `OTU ${a}`
@@ -47,19 +47,17 @@ function buildCharts(sample){
             orientation: "h",
         };
 
-        var barChart = [trace1];
-
         var layout = {
-            title: "Top 10 OTUs",
-            height: 600,
-            width: 1000,
+            title: "Top 10 OTU IDs",
+            height: 700,
+            width: 950,
         };
 
         // finalize barchart
         Plotly.newPlot("bar", barChart, layout);
 
-        // bubble chart (#TRACE2)
-        var trace2 = {
+        // bubble chart
+        var bubbleChart = {
             x: otuIDS,
             y: sampleValues,
             text: otuLabels,
@@ -69,7 +67,6 @@ function buildCharts(sample){
                 size: sampleValues
             }
         };
-        var bubbleChart = [trace2];
         
         var layout2 = {
             title: "Operational Taxonomic Units",
@@ -99,7 +96,7 @@ function init() {
             dropdown.append("option").text(name).property("value");
         });
 
-        getPlot(data.names[0]);
+        getPlots(data.names[0]);
         getInfo(data.names[0]);
     });
 }
