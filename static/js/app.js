@@ -1,8 +1,8 @@
 // build metadata table from samples.json
 
-function buildMetadata(sample){
+function getPlots(id){
     d3.json("samples.json").then(data =>{
-        // console.log(data);
+        console.log(data);
         var metaData = data.metadata;
         var results = metaData.filter(sampleObject =>
             sampleObject.id == sample);
@@ -85,5 +85,23 @@ function buildCharts(sample){
         Plotly.newPlot("bubble", bubbleChart, layout2);
     });
 };
+
+// initializing data
+
+function init() {
+
+    var dropdown = d3.select("#selDataset");
+
+    d3.json("samples.json").then((data) => {
+        console.log(data)
+
+        data.names.forEach(function(name) {
+            dropdown.append("option").text(name).property("value");
+        });
+
+        getPlot(data.names[0]);
+        getInfo(data.names[0]);
+    });
+}
 
 init();
