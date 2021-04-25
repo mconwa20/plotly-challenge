@@ -1,13 +1,13 @@
 // build metadata table from samples.json
 
-function getPlots(id){
-    d3.json("samples.json").then(data =>{
+function buildTable(id){
+    d3.json("samples.json").then(function(data) {
         console.log(data);
         var metaData = data.metadata;
         var results = metaData.filter(sampleObject =>
             sampleObject.id == sample);
         var finalResult = results[0];
-        // console.log(finalResult);
+        console.log(finalResult);
         var demographicsData = d3.select("#sample-metadata");
         demographicsData.html("");
         Object.entries(finalResult).forEach(([key, value]) => {
@@ -19,7 +19,7 @@ function getPlots(id){
 
 // horizontal bar chart and bubble chart
 
-function buildCharts(sample){
+function buildCharts(id){
     d3.json("samples.json").then(data =>{
         var sample = data.sample;
         var results = sample.filter(sampleObject =>
@@ -37,7 +37,7 @@ function buildCharts(sample){
 
 
         // bar chart
-        var barChart = {
+        var trace1 = {
             x: sliceIds,
             y: sliceValues.map(function(a){
                 return `OTU ${a}`
@@ -48,16 +48,22 @@ function buildCharts(sample){
         };
 
         var layout = {
-            title: "Top 10 OTU IDs",
-            height: 700,
-            width: 950,
+            title: "Top 10 OTU",
+            margin: {
+                l: 100,
+                r: 100,
+                t: 30,
+                b: 20
+            }
         };
+
+        var barChart = [trace1];
 
         // finalize barchart
         Plotly.newPlot("bar", barChart, layout);
 
         // bubble chart
-        var bubbleChart = {
+        var trace2 = {
             x: otuIDS,
             y: sampleValues,
             text: otuLabels,
@@ -71,12 +77,14 @@ function buildCharts(sample){
         var layout2 = {
             title: "Operational Taxonomic Units",
             margin: {
-            l: 100,
-            r: 100,
-            t: 100,
-            b: 100,
+                l: 100,
+                r: 100,
+                t: 100,
+                b: 100,
             }
         };
+
+        var bubbleChart = [trace2];
 
         // finalize bubble chart
         Plotly.newPlot("bubble", bubbleChart, layout2);
@@ -96,7 +104,7 @@ function init() {
             dropdown.append("option").text(name).property("value");
         });
 
-        getPlots(data.names[0]);
+        buildTable(data.names[0]);
         getInfo(data.names[0]);
     });
 }
