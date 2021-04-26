@@ -1,43 +1,43 @@
-// build metadata table from samples.json
+// retrieve data from samples.json
 
-function buildTable(id){
+function getPlot(id) {
+
+    // specify samples.json file
     d3.json("samples.json").then(function(data) {
         console.log(data);
-        var metaData = data.metadata;
-        var results = metaData.filter(sampleObject =>
-            sampleObject.id == sample);
-        var finalResult = results[0];
-        console.log(finalResult);
+        var metadata = data.metadata;
+        var results = metadata.filter(s => s.id == id);
+        var filteredResult = results[0];
+        console.log(filteredResult);
         var demographicsData = d3.select("#sample-metadata");
         demographicsData.html("");
-        Object.entries(finalResult).forEach(([key, value]) => {
+        Object.entries(filteredResult).forEach(([key, value]) => {
             demographicsData.append("h6").text(`${key}: ${value}`)
         });
-        console.log(finalResult);
+        console.log(filteredResult);
     })
 };
 
-// horizontal bar chart and bubble chart
+// charts
 
 function buildCharts(id){
-    d3.json("samples.json").then(data =>{
-        var sample = data.sample;
-        var results = sample.filter(sampleObject =>
-            sampleObject.id == sample);
-        var finalResult = results[0];
-        console.log(finalResult);
+    d3.json("samples.json").then(function(data) =>{
+        var sample = data.samples;
+        var results = sample.filter(s => s.id == id);
+        var filteredResult = results[0];
+        console.log(filteredResult);
 
-        var otuIDS = finalResult.otu_ids;
-        var sampleValues = finalResult.sample_values;
-        var otuLabels = finalResult.otu_labels;
-
+        var IDS = filteredResult.otu_ids;
+        var values = filteredResult.sample_values;
+        var labels = filteredResult.otu_labels;
+        //slice
         var sliceIds = otuIDS.slice(0,10).reverse();
         var sliceValues = sampleValues.slice(0,10).reverse();
         var sliceLabels = otuLabels.slice(0,10).reverse();
 
 
         // bar chart
-        var trace1 = {
+        var trace = {
             x: sliceIds,
             y: sliceValues.map(function(a){
                 return `OTU ${a}`
@@ -57,25 +57,24 @@ function buildCharts(id){
             }
         };
 
-        var barChart = [trace1];
+        var barChart = [trace];
 
         // finalize barchart
         Plotly.newPlot("bar", barChart, layout);
 
         // bubble chart
-        var trace2 = {
-            x: otuIDS,
-            y: sampleValues,
-            text: otuLabels,
+        var trace1 = {
+            x: IDS,
+            y: values,
+            text: labels,
             mode: "markers",
             marker: {
-                color: otuIDS,
-                size: sampleValues
+                color: IDS,
+                size: values
             }
         };
         
         var layout2 = {
-            title: "Operational Taxonomic Units",
             margin: {
                 l: 100,
                 r: 100,
@@ -84,7 +83,7 @@ function buildCharts(id){
             }
         };
 
-        var bubbleChart = [trace2];
+        var bubbleChart = [trace1];
 
         // finalize bubble chart
         Plotly.newPlot("bubble", bubbleChart, layout2);
@@ -104,8 +103,8 @@ function init() {
             dropdown.append("option").text(name).property("value");
         });
 
-        buildTable(data.names[0]);
-        getInfo(data.names[0]);
+        getPlot(data.names[0]);
+        buildCharts(data.names[0]);
     });
 }
 
