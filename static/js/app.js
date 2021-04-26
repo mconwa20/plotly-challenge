@@ -3,11 +3,11 @@
 function getPlot(id) {
 
     // specify samples.json file
-    d3.json("samples.json").then(function(data) {
+    d3.json("samples.json").then((data) {
         console.log(data);
         var metadata = data.metadata;
-        var results = metadata.filter(s => s.id == id);
-        var filteredResult = results[0];
+        var metadataResults = metadata.filter(s => s.id == id);
+        var filteredResult = metadataResults[0];
         console.log(filteredResult);
         var demographicsData = d3.select("#sample-metadata");
         demographicsData.html("");
@@ -21,19 +21,19 @@ function getPlot(id) {
 // charts
 
 function buildCharts(id){
-    d3.json("samples.json").then(function(data) =>{
+    d3.json("samples.json").then((data) =>{
         var sample = data.samples;
         var results = sample.filter(s => s.id == id);
         var filteredResult = results[0];
         console.log(filteredResult);
-
+        // filtered ids, values, labels
         var IDS = filteredResult.otu_ids;
         var values = filteredResult.sample_values;
         var labels = filteredResult.otu_labels;
-        //slice
-        var sliceIds = otuIDS.slice(0,10).reverse();
-        var sliceValues = sampleValues.slice(0,10).reverse();
-        var sliceLabels = otuLabels.slice(0,10).reverse();
+        //sliced (top 10) ids, values, labels
+        var sliceIds = IDS.slice(0,10).reverse();
+        var sliceValues = values.slice(0,10).reverse();
+        var sliceLabels = labels.slice(0,10).reverse();
 
 
         // bar chart
